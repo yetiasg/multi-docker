@@ -1,0 +1,25 @@
+language: generic
+os:
+  - linux
+dist: xenial
+services:
+  - docker
+
+before_install:
+  - docker build -t yetiasg/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run yetiasg/react-test  npm test -- --coverage
+
+after_success:
+  - docker build -t yetiasg/multi-client ./client
+  - docker build -t yetiasg/multi-nginx ./nginx
+  - docker build -t yetiasg/multi-server ./server
+  - docker build -t yetiasg/multi-worker ./worker
+  #Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  #Take those images and push them to docker hub
+  - docker push yetiasg/multi-client
+  - docker push yetiasg/multi-nginx
+  - docker push yetiasg/multi-server 
+  - docker push yetiasg/multi-worker 

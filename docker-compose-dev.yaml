@@ -20,7 +20,6 @@ services:
     ports:
       - '3050:80'
 
-
   api:
     depends_on:
       - postgres
