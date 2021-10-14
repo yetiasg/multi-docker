@@ -1,4 +1,3 @@
-sudo: required
 language: generic
 os:
   - linux
@@ -24,3 +23,15 @@ after_success:
   - docker push yetiasg/multi-nginx
   - docker push yetiasg/multi-server 
   - docker push yetiasg/multi-worker 
+
+deploy:
+  provider: elasticbeanstalk
+  region: 'eu-central-1'
+  app: 'multi-docker'
+  env: 'Multidocker-env'
+  bucket_name: 'elasticbeanstalk-eu-central-1-531089319466'
+  bucket_path: 'docker-multi'
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
